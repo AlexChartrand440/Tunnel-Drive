@@ -27,17 +27,25 @@ public class Shooting : MonoBehaviour
         }
     }
 
-    void Shoot()
-    {
+    void Shoot()  {
+        if(ammo <= 0) {
+        return;
+        }
+        if(range > 100f) {
+        return;
+        }
         muzzleFlash.Play();
         RaycastHit hit;
-        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
-        {
+        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range)) {
             Debug.Log(hit.transform.name);
             Gate target = hit.transform.GetComponent<Gate>();
-            if (target != null)
-            {
-
+            if (target != null) {
+                //reduces the health from the gate object.
+                target.health =- damage;
+                //creates projectile aimed at target.
+                Physics.ShootProjectile(target.position, 10);
+                //decrements the ammo value as a shot is fired.
+                ammo =- 1;
             }
         }
     }
